@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/tau_os_ex2.dir/main.c.o  -o tau_os_ex2 
