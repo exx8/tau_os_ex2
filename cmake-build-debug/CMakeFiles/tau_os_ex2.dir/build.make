@@ -77,27 +77,27 @@ include CMakeFiles/tau_os_ex2.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/tau_os_ex2.dir/flags.make
 
-CMakeFiles/tau_os_ex2.dir/main.c.o: CMakeFiles/tau_os_ex2.dir/flags.make
-CMakeFiles/tau_os_ex2.dir/main.c.o: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/eran/CLionProjects/tau_os_ex2/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/tau_os_ex2.dir/main.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/tau_os_ex2.dir/main.c.o   -c /home/eran/CLionProjects/tau_os_ex2/main.c
+CMakeFiles/tau_os_ex2.dir/shell.c.o: CMakeFiles/tau_os_ex2.dir/flags.make
+CMakeFiles/tau_os_ex2.dir/shell.c.o: ../shell.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/eran/CLionProjects/tau_os_ex2/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/tau_os_ex2.dir/shell.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/tau_os_ex2.dir/shell.c.o   -c /home/eran/CLionProjects/tau_os_ex2/shell.c
 
-CMakeFiles/tau_os_ex2.dir/main.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/tau_os_ex2.dir/main.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/eran/CLionProjects/tau_os_ex2/main.c > CMakeFiles/tau_os_ex2.dir/main.c.i
+CMakeFiles/tau_os_ex2.dir/shell.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/tau_os_ex2.dir/shell.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/eran/CLionProjects/tau_os_ex2/shell.c > CMakeFiles/tau_os_ex2.dir/shell.c.i
 
-CMakeFiles/tau_os_ex2.dir/main.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/tau_os_ex2.dir/main.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/eran/CLionProjects/tau_os_ex2/main.c -o CMakeFiles/tau_os_ex2.dir/main.c.s
+CMakeFiles/tau_os_ex2.dir/shell.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/tau_os_ex2.dir/shell.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/eran/CLionProjects/tau_os_ex2/shell.c -o CMakeFiles/tau_os_ex2.dir/shell.c.s
 
 # Object files for target tau_os_ex2
 tau_os_ex2_OBJECTS = \
-"CMakeFiles/tau_os_ex2.dir/main.c.o"
+"CMakeFiles/tau_os_ex2.dir/shell.c.o"
 
 # External object files for target tau_os_ex2
 tau_os_ex2_EXTERNAL_OBJECTS =
 
-tau_os_ex2: CMakeFiles/tau_os_ex2.dir/main.c.o
+tau_os_ex2: CMakeFiles/tau_os_ex2.dir/shell.c.o
 tau_os_ex2: CMakeFiles/tau_os_ex2.dir/build.make
 tau_os_ex2: CMakeFiles/tau_os_ex2.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/eran/CLionProjects/tau_os_ex2/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable tau_os_ex2"

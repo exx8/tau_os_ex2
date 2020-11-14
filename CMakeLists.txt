@@ -3,4 +3,4 @@ project(tau_os_ex2 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(tau_os_ex2 main.c)
+add_executable(tau_os_ex2 shell.c)
