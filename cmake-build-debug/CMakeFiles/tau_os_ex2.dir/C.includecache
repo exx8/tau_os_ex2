@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/eran/CLionProjects/tau_os_ex2/shell.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+errno.h
+-
+
