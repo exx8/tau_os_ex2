@@ -6,6 +6,14 @@
 
 #IncludeRegexTransform: 
 
+/home/eran/CLionProjects/tau_os_ex2/myshell.c
+zconf.h
+-
+wait.h
+-
+stdbool.h
+-
+
 /home/eran/CLionProjects/tau_os_ex2/shell.c
 stdio.h
 -
@@ -15,4 +23,6 @@ string.h
 -
 errno.h
 -
+myshell.c
+/home/eran/CLionProjects/tau_os_ex2/myshell.c
 
