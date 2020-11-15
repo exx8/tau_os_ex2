@@ -39,12 +39,31 @@ args remove_apersand(args *userInput) {
     return (*userInput);
 }
 
+void bar_handler(args *userInput,int bar_index)
+{
+    args newUserInput;
+    pid_t fork_id=fork();
+    if(fork_id)
+    {
+        userInput->count=bar_index;
+        userInput->arglist[bar_index]=END_OF_STRING;
+    }
+    else
+    {
+        userInput->count=userInput->count-bar_index;
+        userInput->arglist=userInput->arglist+bar_index+1;
+    }
+    execute(userInput->arglist);
+}
+
 void child_action(args userInput) {
     userInput = remove_apersand(&userInput);
     const int bar_location = find_first_vertical_bar(userInput);
     if (bar_location == -1) {
         execute(userInput.arglist);
     }
+    else
+        bar_handler(&userInput,bar_location);
 }
 
 
