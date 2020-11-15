@@ -21,17 +21,33 @@ int find_first_vertical_bar(args userInput) {
     return NOT_FOUND;
 }
 
+void execute(char **arglist) {
+    const char *file = arglist[0];
+    char **argv = arglist;
+    execvp(file, argv);
+}
+int get_ampersand_place(args *userInput) { return (*userInput).count - 1; }
+
+args remove_apersand(args *userInput) {
+    const int ampersand_place = get_ampersand_place(userInput);
+    if((*userInput).arglist[ampersand_place][0] == '&') {
+        (*userInput).arglist[ampersand_place] = (char *) NULL;
+        userInput->count--;
+    }
+    return (*userInput);
+}
+
 void child_action(args userInput) {
+    userInput = remove_apersand(&userInput);
     const int bar_location = find_first_vertical_bar(userInput);
-    if(bar_location==-1) {
-        const char* file=userInput.arglist[0];
-        char **argv=userInput.arglist;
-        execvp(file,argv);
+    if (bar_location == -1) {
+        execute(userInput.arglist);
     }
 }
 
+
 void parent_action(args userInput, pid_t pid) {
-    const int ampersand_place = userInput.count - 1;
+    const int ampersand_place = get_ampersand_place(&userInput);
     const bool should_task_run_in_background = userInput.arglist[ampersand_place][0] == '&';
     if (!should_task_run_in_background) {
         waitpid(pid, NULL, 0);
