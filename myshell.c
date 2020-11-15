@@ -22,6 +22,8 @@ int find_first_vertical_bar(args userInput) {
 }
 
 void child_action(args userInput) {
+    const int bar_location = find_first_vertical_bar(userInput);
+
 
 }
 
@@ -59,6 +61,7 @@ int process_arglist(int count, char **arglist) {
     return is_parent;
 }
 
+//@todo remove reaped
 void zombie_reaper() {
     printf("reaped");
 }
