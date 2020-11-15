@@ -50,7 +50,7 @@ int process_arglist(int count, char **arglist) {
     pid_t fork_id = fork();
     bool is_parent = fork_id;
     if (is_parent) {
-        parent_action(user_input,fork_id);
+        parent_action(user_input, fork_id);
     } else
         child_action(user_input);
 
@@ -60,14 +60,14 @@ int process_arglist(int count, char **arglist) {
 }
 
 void zombie_reaper() {
-printf("reaped");
+    printf("reaped");
 }
+
 /**
  * sets handler (empty func) as the zombie_reaper to prevent zombies
  */
 void prepare_sigint() {
     sigaction(SIGINT, &(struct sigaction) {zombie_reaper}, NULL);
-    sigaction(SIGCHLD, &(struct sigaction) {zombie_reaper}, NULL);
 
 }
 
