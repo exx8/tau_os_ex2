@@ -1,6 +1,6 @@
 #include <zconf.h>
-#include <wait.h>
 #include <stdbool.h>
+#include <sys/wait.h>
 
 #define NOT_FOUND -1
 struct _args {
@@ -26,7 +26,11 @@ void child_action(args userInput) {
 }
 
 void parent_action(args userInput) {
-
+    const int ampersand_place = userInput.count - 1;
+    const bool should_task_run_in_background = userInput.arglist[ampersand_place] == '&';
+    if (!should_task_run_in_background) {
+        wait(NULL);
+    }
 }
 
 args convert_user_input_to_structure(int count, char **arglist) {
@@ -48,6 +52,8 @@ int process_arglist(int count, char **arglist) {
         parent_action(user_input);
     } else
         child_action(user_input);
+
+
     printf("%d \n", fork_id);
     return is_parent;
 }
