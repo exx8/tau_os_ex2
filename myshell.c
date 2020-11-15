@@ -67,6 +67,7 @@ printf("reaped");
  */
 void prepare_sigint() {
     sigaction(SIGINT, &(struct sigaction) {zombie_reaper}, NULL);
+    sigaction(SIGCHLD, &(struct sigaction) {zombie_reaper}, NULL);
 
 }
 
