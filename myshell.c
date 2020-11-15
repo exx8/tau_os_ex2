@@ -3,6 +3,7 @@
 #include <sys/wait.h>
 
 #define NOT_FOUND -1
+#define END_OF_STRING (char *) NULL
 struct _args {
     int count;
     char **arglist;
@@ -26,12 +27,13 @@ void execute(char **arglist) {
     char **argv = arglist;
     execvp(file, argv);
 }
+
 int get_ampersand_place(args *userInput) { return (*userInput).count - 1; }
 
 args remove_apersand(args *userInput) {
     const int ampersand_place = get_ampersand_place(userInput);
-    if((*userInput).arglist[ampersand_place][0] == '&') {
-        (*userInput).arglist[ampersand_place] = (char *) NULL;
+    if ((*userInput).arglist[ampersand_place][0] == '&') {
+        (*userInput).arglist[ampersand_place] = END_OF_STRING;
         userInput->count--;
     }
     return (*userInput);
