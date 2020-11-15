@@ -9,9 +9,9 @@
 /home/eran/CLionProjects/tau_os_ex2/myshell.c
 zconf.h
 -
-wait.h
--
 stdbool.h
+-
+sys/wait.h
 -
 
 /home/eran/CLionProjects/tau_os_ex2/shell.c
