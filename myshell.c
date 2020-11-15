@@ -16,15 +16,18 @@ struct _args {
  */
 int find_first_vertical_bar(args userInput) {
     for (int i = 0; i < userInput.count; i++)
-        if (userInput.arglist[i] == '|')
+        if (userInput.arglist[i][0] == '|')
             return i;
     return NOT_FOUND;
 }
 
 void child_action(args userInput) {
     const int bar_location = find_first_vertical_bar(userInput);
-
-
+    if(bar_location==-1) {
+        const char* file=userInput.arglist[0];
+        char **argv=userInput.arglist;
+        execvp(file,argv);
+    }
 }
 
 void parent_action(args userInput, pid_t pid) {
@@ -57,7 +60,7 @@ int process_arglist(int count, char **arglist) {
         child_action(user_input);
 
 
-    printf("%d \n", fork_id);
+    //printf("%d \n", fork_id);
     return is_parent;
 }
 
