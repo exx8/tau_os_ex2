@@ -51,9 +51,14 @@ args remove_apersand(args *userInput) {
     }
     return (*userInput);
 }
+void validate_pipe_close(int status)
+{
+    error_handler(status,"closing pipe failed");
+}
 
 void split_for_each_task(args *userInput, int bar_index) {
     pid_t fork_id = fork();
+    error_handler(fork_id,"forking failed");
     int pipe_end[2];
     int create_pipe_status=pipe(pipe_end);
     error_handler(create_pipe_status,"pipe creation failed");
@@ -63,16 +68,16 @@ void split_for_each_task(args *userInput, int bar_index) {
         userInput->count = bar_index;
         userInput->arglist[bar_index] = END_OF_STRING;
         status = dup2(pipe_end[1], STDOUT_FILENO);
-        close(pipe_end[0]);
-        close(pipe_end[1]);
+        validate_pipe_close(close(pipe_end[0]));
+        validate_pipe_close(close(pipe_end[1]));
     } else {
         //child
         userInput->count = userInput->count - bar_index;
         userInput->arglist = userInput->arglist + bar_index + 1;
 
         status = dup2(pipe_end[0], STDIN_FILENO);
-        close(pipe_end[0]);
-        close(pipe_end[1]); //keep
+        validate_pipe_close(close(pipe_end[0]));
+        validate_pipe_close(close(pipe_end[1])); //keep
     }
     error_handler(status, "piping duping failed");
 }
