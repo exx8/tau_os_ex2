@@ -17,8 +17,8 @@ struct _args {
  */
 error_handler(int status, char **msg) {
     if (status < 0) {
-        printf("%s \n", msg);
-        printf("%s \n", strerror(status));
+        fprintf(stderr, "%s \n", msg);
+        fprintf(stderr, "%s \n", strerror(status));
         exit(1);
     }
 
