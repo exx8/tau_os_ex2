@@ -140,7 +140,8 @@ void zombie_reaper() {
  * sets handler (empty func) as the zombie_reaper to prevent zombies
  */
 void prepare_sigint() {
-    sigaction(SIGINT, &(struct sigaction) {zombie_reaper}, NULL);
+    int status=sigaction(SIGINT, &(struct sigaction) {zombie_reaper}, NULL);
+    error_handler(status,"couldn't set zombie handler");
 
 }
 
