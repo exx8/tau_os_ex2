@@ -55,7 +55,8 @@ args remove_apersand(args *userInput) {
 void split_for_each_task(args *userInput, int bar_index) {
     pid_t fork_id = fork();
     int pipe_end[2];
-    pipe(pipe_end);
+    int create_pipe_status=pipe(pipe_end);
+    error_handler(create_pipe_status,"pipe creation failed");
     int status;
     if (fork_id) {
         //parent
@@ -114,6 +115,7 @@ int process_arglist(int count, char **arglist) {
 
     args user_input = convert_user_input_to_structure(count, arglist);
     pid_t fork_id = fork();
+    error_handler(fork_id,"forking failed");
     bool is_parent = fork_id;
     if (is_parent) {
         parent_action(user_input, fork_id);
@@ -121,7 +123,6 @@ int process_arglist(int count, char **arglist) {
         child_action(user_input);
 
 
-    //printf("%d \n", fork_id);
     return is_parent;
 }
 
