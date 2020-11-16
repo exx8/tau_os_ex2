@@ -15,13 +15,14 @@ struct _args {
  * @param arglist the array of char to look in
  * @return the index of the first | or NOT_FOUND
  */
- error_handler(int status,char* msg)
-{
-     if(status<0) {
-         printf("%s \n", msg);
-    exit(1);
-     }
+error_handler(int status, char *msg) {
+    if (status < 0) {
+        printf("%s \n", msg);
+        free(msg);
+        exit(1);
+    }
 }
+
 int find_first_vertical_bar(args userInput) {
     for (int i = 0; i < userInput.count; i++)
         if (userInput.arglist[i][0] == '|')
@@ -30,10 +31,10 @@ int find_first_vertical_bar(args userInput) {
 }
 
 void execute(char **arglist) {
-     const char *file = arglist[0];
+    const char *file = arglist[0];
     char **argv = arglist;
-    int status=execvp(file, argv);
-    error_handler(status,"execution of failed");
+    int status = execvp(file, argv);
+    error_handler(status, asprintf("execution of %s failed", file);
 }
 
 int get_ampersand_place(args *userInput) { return (*userInput).count - 1; }
@@ -56,7 +57,7 @@ void split_for_each_task(args *userInput, int bar_index) {
         //parent
         userInput->count = bar_index;
         userInput->arglist[bar_index] = END_OF_STRING;
-        status=dup2(pipe_end[1], STDOUT_FILENO);
+        status = dup2(pipe_end[1], STDOUT_FILENO);
         close(pipe_end[0]);
         close(pipe_end[1]);
     } else {
@@ -64,11 +65,11 @@ void split_for_each_task(args *userInput, int bar_index) {
         userInput->count = userInput->count - bar_index;
         userInput->arglist = userInput->arglist + bar_index + 1;
 
-        status=dup2(pipe_end[0], STDIN_FILENO);
+        status = dup2(pipe_end[0], STDIN_FILENO);
         close(pipe_end[0]);
-        close(pipe_end[1]);
+        close(pipe_end[1]); //keep
     }
-    error_handler(status,"piping duping failed");
+    error_handler(status, "piping duping failed");
 }
 
 void bar_handler(args *userInput, int bar_index) {
