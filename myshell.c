@@ -35,8 +35,8 @@ void execute(char **arglist) {
     char **argv = arglist;
     int status = execvp(file, argv);
     char **msg;
-    asprintf(&msg,"execution of %s failed", file);
-    error_handler(status,msg);
+    asprintf(&msg, "execution of %s failed", file);
+    error_handler(status, msg);
     free(msg);
 }
 
@@ -50,17 +50,17 @@ args remove_apersand(args *userInput) {
     }
     return (*userInput);
 }
-void validate_pipe_close(int status)
-{
-    error_handler(status,"closing pipe failed");
+
+void validate_pipe_close(int status) {
+    error_handler(status, "closing pipe failed");
 }
 
 void split_for_each_task(args *userInput, int bar_index) {
     pid_t fork_id = fork();
-    error_handler(fork_id,"forking failed");
+    error_handler(fork_id, "forking failed");
     int pipe_end[2];
-    int create_pipe_status=pipe(pipe_end);
-    error_handler(create_pipe_status,"pipe creation failed");
+    int create_pipe_status = pipe(pipe_end);
+    error_handler(create_pipe_status, "pipe creation failed");
     int status;
     if (fork_id) {
         //parent
@@ -100,8 +100,8 @@ void parent_action(args userInput, pid_t pid) {
     const int ampersand_place = get_ampersand_place(&userInput);
     const bool should_task_run_in_background = userInput.arglist[ampersand_place][0] == '&';
     if (!should_task_run_in_background) {
-        int status=waitpid(pid, NULL, 0);
-        error_handler(status,"wait failed");
+        int status = waitpid(pid, NULL, 0);
+        error_handler(status, "wait failed");
     }
 
 }
@@ -120,7 +120,7 @@ int process_arglist(int count, char **arglist) {
 
     args user_input = convert_user_input_to_structure(count, arglist);
     pid_t fork_id = fork();
-    error_handler(fork_id,"forking failed");
+    error_handler(fork_id, "forking failed");
     bool is_parent = fork_id;
     if (is_parent) {
         parent_action(user_input, fork_id);
