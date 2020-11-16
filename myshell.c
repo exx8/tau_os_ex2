@@ -57,12 +57,13 @@ void validate_pipe_close(int status) {
 }
 
 void split_for_each_task(args *userInput, int bar_index) {
-    pid_t fork_id = fork();
-    error_handler(fork_id, "forking failed");
+
     int pipe_end[2];
     int create_pipe_status = pipe(pipe_end);
     error_handler(create_pipe_status, "pipe creation failed");
     int status;
+    pid_t fork_id = fork();
+    error_handler(fork_id, "forking failed");
     if (fork_id) {
         //parent
         userInput->count = bar_index;
