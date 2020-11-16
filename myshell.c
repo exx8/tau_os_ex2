@@ -39,8 +39,7 @@ args remove_apersand(args *userInput) {
     return (*userInput);
 }
 
-void bar_handler(args *userInput, int bar_index) {
-    args newUserInput;
+void split_for_each_task(args *userInput, int bar_index) {
     pid_t fork_id = fork();
     if (fork_id) {
         userInput->count = bar_index;
@@ -49,6 +48,10 @@ void bar_handler(args *userInput, int bar_index) {
         userInput->count = userInput->count - bar_index;
         userInput->arglist = userInput->arglist + bar_index + 1;
     }
+}
+
+void bar_handler(args *userInput, int bar_index) {
+    split_for_each_task(userInput, bar_index);
     execute(userInput->arglist);
 }
 
