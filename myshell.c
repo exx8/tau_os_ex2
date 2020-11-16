@@ -18,6 +18,7 @@ struct _args {
 error_handler(int status, char **msg) {
     if (status < 0) {
         printf("%s \n", msg);
+        printf("%s \n", strerror(status));
         exit(1);
     }
 
@@ -134,6 +135,7 @@ int process_arglist(int count, char **arglist) {
 //@todo remove reaped
 void zombie_reaper() {
     printf("reaped");
+
 }
 
 /**
