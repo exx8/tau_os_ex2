@@ -18,10 +18,8 @@ struct _args {
 error_handler(int status, char **msg) {
     if (status < 0) {
         printf("%s \n", msg);
-        free(msg);
         exit(1);
     }
-    free(msg);
 
 }
 
@@ -39,6 +37,7 @@ void execute(char **arglist) {
     char **msg;
     asprintf(&msg,"execution of %s failed", file);
     error_handler(status,msg);
+    free(msg);
 }
 
 int get_ampersand_place(args *userInput) { return (*userInput).count - 1; }
@@ -101,7 +100,8 @@ void parent_action(args userInput, pid_t pid) {
     const int ampersand_place = get_ampersand_place(&userInput);
     const bool should_task_run_in_background = userInput.arglist[ampersand_place][0] == '&';
     if (!should_task_run_in_background) {
-        waitpid(pid, NULL, 0);
+        int status=waitpid(pid, NULL, 0);
+        error_handler(status,"wait failed");
     }
 
 }
