@@ -140,7 +140,7 @@ void parent_action(args userInput, pid_t pid) {
     const bool should_task_run_in_background = userInput.arglist[ampersand_place][0] == '&';
     if (!should_task_run_in_background) {
         int status = waitpid(pid, NULL, 0);
-        error_handler(status, "wait failed");
+       // error_handler(status, "wait failed");
     }
 
 }
@@ -178,7 +178,7 @@ int process_arglist(int count, char **arglist) {
  * handle zombie reaping
  */
 //@todo remove reaped
-void zombie_reaper() {
+void zombie_reaper(int signal) {
     printf("reaped");
 
 }
