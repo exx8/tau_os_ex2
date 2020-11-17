@@ -4,16 +4,18 @@
 
 #define NOT_FOUND -1
 #define END_OF_STRING (char *) NULL
+/**
+ * a structure for describing arguments
+ */
 struct _args {
     int count;
     char **arglist;
 } typedef args;
 
 /**
- *
- * @param count num of elements
- * @param arglist the array of char to look in
- * @return the index of the first | or NOT_FOUND
+ * generic error handler for function of the project
+ * @param status - the status which returns from the function
+ * @param msg - a custom message to be printed into stderr
  */
 void error_handler(int status, char *msg) {
     if (status < 0) {
@@ -23,13 +25,22 @@ void error_handler(int status, char *msg) {
     }
 
 }
-
+/**
+ *
+ * @param count num of elements
+ * @param arglist the array of char to look in
+ * @return the index of the first | or NOT_FOUND
+ */
 int find_first_vertical_bar(args userInput) {
     for (int i = 0; i < userInput.count; i++)
         if (userInput.arglist[i][0] == '|')
             return i;
     return NOT_FOUND;
 }
+/**
+ * a convenient execution wrapper function
+ * @param arglist- list of args to be executed
+ */
 
 void execute(char **arglist) {
     const char *file = arglist[0];
@@ -40,9 +51,17 @@ void execute(char **arglist) {
     error_handler(status, msg);
     free(msg);
 }
-
+/**
+ * returns the ampersand place
+ * @param userInput -args structure
+ * @return the correct place
+ */
 int get_ampersand_place(args *userInput) { return (*userInput).count - 1; }
-
+/**
+ * remove the apersand
+ * @param userInput args structure
+ * @return args with no apersand
+ */
 args remove_apersand(args *userInput) {
     const int ampersand_place = get_ampersand_place(userInput);
     if ((*userInput).arglist[ampersand_place][0] == '&') {
@@ -51,11 +70,18 @@ args remove_apersand(args *userInput) {
     }
     return (*userInput);
 }
-
+/**
+ * error wrapper for pipe closure
+ * @param status
+ */
 void validate_pipe_close(int status) {
     error_handler(status, "closing pipe failed");
 }
-
+/**
+ * in case of a pipe,split into 2 process which communicate via a pipe
+ * @param userInput args struct
+ * @param bar_index the place of the pipe command
+ */
 void split_for_each_task(args *userInput, int bar_index) {
 
     int pipe_end[2];
@@ -82,12 +108,19 @@ void split_for_each_task(args *userInput, int bar_index) {
     }
     error_handler(status, "piping duping failed");
 }
-
+/**
+ * func to handle pipe command
+ * @param userInput args struct
+ * @param bar_index place of the pipe
+ */
 void bar_handler(args *userInput, int bar_index) {
     split_for_each_task(userInput, bar_index);
     execute(userInput->arglist);
 }
-
+/**
+ * func for handle the forked process from the shell
+ * @param userInput
+ */
 void child_action(args userInput) {
     userInput = remove_apersand(&userInput);
     const int bar_location = find_first_vertical_bar(userInput);
@@ -97,7 +130,11 @@ void child_action(args userInput) {
         bar_handler(&userInput, bar_location);
 }
 
-
+/**
+ * func to handle shell ui after fork
+ * @param userInput
+ * @param pid
+ */
 void parent_action(args userInput, pid_t pid) {
     const int ampersand_place = get_ampersand_place(&userInput);
     const bool should_task_run_in_background = userInput.arglist[ampersand_place][0] == '&';
@@ -107,7 +144,12 @@ void parent_action(args userInput, pid_t pid) {
     }
 
 }
-
+/**
+ * convert user input to structure
+ * @param count
+ * @param arglist
+ * @return the args structure
+ */
 args convert_user_input_to_structure(int count, char **arglist) {
     args userInput;
     userInput.count = count;
@@ -132,7 +174,9 @@ int process_arglist(int count, char **arglist) {
 
     return is_parent;
 }
-
+/**
+ * handle zombie reaping
+ */
 //@todo remove reaped
 void zombie_reaper() {
     printf("reaped");
