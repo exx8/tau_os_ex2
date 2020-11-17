@@ -15,7 +15,7 @@ struct _args {
  * @param arglist the array of char to look in
  * @return the index of the first | or NOT_FOUND
  */
-error_handler(int status, char **msg) {
+void error_handler(int status, char **msg) {
     if (status < 0) {
         fprintf(stderr, "%s \n", msg);
         fprintf(stderr, "%s \n", strerror(status));
