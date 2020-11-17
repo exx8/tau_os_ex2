@@ -15,7 +15,7 @@ struct _args {
  * @param arglist the array of char to look in
  * @return the index of the first | or NOT_FOUND
  */
-void error_handler(int status, char **msg) {
+void error_handler(int status, char *msg) {
     if (status < 0) {
         fprintf(stderr, "%s \n", msg);
         fprintf(stderr, "%s \n", strerror(status));
@@ -35,7 +35,7 @@ void execute(char **arglist) {
     const char *file = arglist[0];
     char **argv = arglist;
     int status = execvp(file, argv);
-    char **msg;
+    char *msg;
     asprintf(&msg, "execution of %s failed", file);
     error_handler(status, msg);
     free(msg);
