@@ -20,7 +20,7 @@ struct _args {
 void error_handler(int status, char *msg) {
     if (status < 0) {
         fprintf(stderr, "%s \n", msg);
-        fprintf(stderr, "%s \n", strerror(status));
+        fprintf(stderr, "%s \n", strerror(errno));
         exit(1);
     }
 
