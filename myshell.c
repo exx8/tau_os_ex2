@@ -122,6 +122,7 @@ void bar_handler(args *userInput, int bar_index) {
  * @param userInput
  */
 void child_action(args userInput) {
+    signal(SIGINT, SIG_DFL);
     userInput = remove_apersand(&userInput);
     const int bar_location = find_first_vertical_bar(userInput);
     if (bar_location == -1) {
@@ -194,7 +195,9 @@ void prepare_sigint() {
 
 // prepare and finalize calls for initialization and destruction of anything required
 int prepare(void) {
-    prepare_sigint();
+    signal(SIGINT, SIG_IGN);
+
+    //prepare_sigint();
     return 0;
 }
 
