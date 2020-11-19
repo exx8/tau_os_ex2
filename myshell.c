@@ -174,11 +174,6 @@ int process_arglist(int count, char **arglist) {
 
     return is_parent;
 }
-/**
- * handle zombie reaping
- */
-//@todo remove reaped
-
 
 /**
  * sets handler (empty func) as the zombie_reaper to prevent zombies
