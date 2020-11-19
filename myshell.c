@@ -174,20 +174,16 @@ int process_arglist(int count, char **arglist) {
 
     return is_parent;
 }
-/**
- * handle zombie reaping
- */
-//@todo remove reaped
-void zombie_reaper(int signal) {
-    printf("reaped");
-
-}
 
 /**
  * sets handler (empty func) as the zombie_reaper to prevent zombies
  */
 void prepare_sigint() {
-    int status = sigaction(SIGINT, &(struct sigaction) {zombie_reaper}, NULL);
+    struct sigaction cntrl_c_catcher;
+    memset(&cntrl_c_catcher,0,sizeof(cntrl_c_catcher));
+    cntrl_c_catcher.sa_flags = SA_RESTART;
+    cntrl_c_catcher.sa_handler = SIG_IGN;
+    int status = sigaction(SIGINT, &cntrl_c_catcher, NULL);
     error_handler(status, "couldn't set zombie handler");
 
 }
