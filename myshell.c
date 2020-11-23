@@ -145,10 +145,15 @@ void child_action(args userInput) {
 }
 void wait_error_handler(int status)
 {
-    if(status==ECHILD)
-        return;
-    if(status==EINTR)
-        return;
+
+   if(status<0) //DUP it's known, but prevents edge case as func may change errno for junk value on success
+   {
+       switch (errno) {
+           case ECHILD:
+           case EINTR:
+               return;
+       }
+   }
     error_handler(status, "wait failed");
 
 }
