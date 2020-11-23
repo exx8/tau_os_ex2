@@ -26,6 +26,19 @@ void error_handler(int status, char *msg) {
 
 }
 /**
+ * sets handler (empty func) as the zombie_reaper to prevent zombies
+ */
+void prepare_sigint(__sighandler_t sighandler) {
+    struct sigaction cntrl_c_catcher;
+    memset(&cntrl_c_catcher,0,sizeof(cntrl_c_catcher));
+    cntrl_c_catcher.sa_flags = SA_RESTART;
+    cntrl_c_catcher.sa_handler =sighandler ;
+    int status = sigaction(SIGINT, &cntrl_c_catcher, NULL);
+    error_handler(status, "couldn't set zombie handler");
+
+}
+
+/**
  *
  * @param count num of elements
  * @param arglist the array of char to look in
@@ -122,6 +135,7 @@ void bar_handler(args *userInput, int bar_index) {
  * @param userInput
  */
 void child_action(args userInput) {
+    prepare_sigint(SIG_DFL);
     userInput = remove_apersand(&userInput);
     const int bar_location = find_first_vertical_bar(userInput);
     if (bar_location == -1) {
@@ -175,22 +189,10 @@ int process_arglist(int count, char **arglist) {
     return is_parent;
 }
 
-/**
- * sets handler (empty func) as the zombie_reaper to prevent zombies
- */
-void prepare_sigint() {
-    struct sigaction cntrl_c_catcher;
-    memset(&cntrl_c_catcher,0,sizeof(cntrl_c_catcher));
-    cntrl_c_catcher.sa_flags = SA_RESTART;
-    cntrl_c_catcher.sa_handler = SIG_IGN;
-    int status = sigaction(SIGINT, &cntrl_c_catcher, NULL);
-    error_handler(status, "couldn't set zombie handler");
-
-}
 
 // prepare and finalize calls for initialization and destruction of anything required
 int prepare(void) {
-    prepare_sigint();
+    prepare_sigint(SIG_IGN);
     return 0;
 }
 

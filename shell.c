@@ -24,7 +24,7 @@ int main(void)
 		char* line = NULL;
 		size_t size;
 		int count = 0;
-
+        printf(">>>");
 		if (getline(&line, &size, stdin) == -1) {
 			free(line);
 			break;
