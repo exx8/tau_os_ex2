@@ -143,7 +143,15 @@ void child_action(args userInput) {
     } else
         bar_handler(&userInput, bar_location);
 }
+void wait_error_handler(int status)
+{
+    if(status==ECHILD)
+        return;
+    if(status==EINTR)
+        return;
+    error_handler(status, "wait failed");
 
+}
 /**
  * func to handle shell ui after fork
  * @param userInput
@@ -154,7 +162,7 @@ void parent_action(args userInput, pid_t pid) {
     const bool should_task_run_in_background = userInput.arglist[ampersand_place][0] == '&';
     if (!should_task_run_in_background) {
         int status = waitpid(pid, NULL, 0);
-       // error_handler(status, "wait failed");
+        wait_error_handler(status);
     }
 
 }
