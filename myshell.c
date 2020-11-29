@@ -1,6 +1,11 @@
 #include <zconf.h>
 #include <stdbool.h>
 #include <sys/wait.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define NOT_FOUND -1
 #define END_OF_STRING (char *) NULL
@@ -59,10 +64,8 @@ void execute(char **arglist) {
     const char *file = arglist[0];
     char **argv = arglist;
     int status = execvp(file, argv);
-    char *msg;
-    asprintf(&msg, "execution of %s failed", file);
+    char *msg="execution  failed";
     error_handler(status, msg);
-    free(msg);
 }
 /**
  * returns the ampersand place
