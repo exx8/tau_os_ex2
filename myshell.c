@@ -93,37 +93,70 @@ args remove_apersand(args *userInput) {
 void validate_pipe_close(int status) {
     error_handler(status, "closing pipe failed");
 }
+
+pid_t safe_fork() {
+    pid_t fork_id = fork();
+    error_handler(fork_id, "forking failed");
+    return fork_id;
+}
+void wait_error_handler(int status)
+{
+
+    if(status<0) //DUP it's known, but prevents edge case as func may change errno for junk value on success
+    {
+        switch (errno) {
+            case ECHILD:
+            case EINTR:
+                return;
+        }
+    }
+    error_handler(status, "wait failed");
+
+}
 /**
  * in case of a pipe,split into 2 process which communicate via a pipe
  * @param userInput args struct
  * @param bar_index the place of the pipe command
  */
-void split_for_each_task(args *userInput, int bar_index) {
+int split_for_each_task(args *userInput, int bar_index) {
 
     int pipe_end[2];
     int create_pipe_status = pipe(pipe_end);
     error_handler(create_pipe_status, "pipe creation failed");
     int status;
-    pid_t fork_id = fork();
-    error_handler(fork_id, "forking failed");
-    if (fork_id) {
+    userInput->arglist[bar_index] = END_OF_STRING;
+    pid_t fork_id = safe_fork();
+    if(!fork_id) {
         //parent
-        waitpid(fork_id,NULL,0);
         userInput->count = bar_index;
-        userInput->arglist[bar_index] = END_OF_STRING;
         status = dup2(pipe_end[1], STDOUT_FILENO);
         validate_pipe_close(close(pipe_end[0]));
         validate_pipe_close(close(pipe_end[1]));
-    } else {
-        //child
-        userInput->count = userInput->count - bar_index;
-        userInput->arglist = userInput->arglist + bar_index + 1;
-
-        status = dup2(pipe_end[0], STDIN_FILENO);
-        validate_pipe_close(close(pipe_end[0]));
-        validate_pipe_close(close(pipe_end[1])); //keep
     }
-    error_handler(status, "piping duping failed");
+    else {
+
+        pid_t fork_id2 = safe_fork();
+        if (!fork_id2) {
+            //child
+            userInput->count = userInput->count - bar_index;
+            userInput->arglist = userInput->arglist + bar_index + 1;
+
+            status = dup2(pipe_end[0], STDIN_FILENO);
+            validate_pipe_close(close(pipe_end[0]));
+            validate_pipe_close(close(pipe_end[1]));
+
+            error_handler(status, "piping duping failed");
+        }
+        else {
+
+            validate_pipe_close(close(pipe_end[0]));
+            validate_pipe_close(close(pipe_end[1]));
+            wait_error_handler(wait(NULL));
+            wait_error_handler(wait(NULL));
+            return 1;
+        }
+    }
+    return 0; // it will never reach here, but for the simplicity of the analysis
 }
 /**
  * func to handle pipe command
@@ -131,8 +164,9 @@ void split_for_each_task(args *userInput, int bar_index) {
  * @param bar_index place of the pipe
  */
 void bar_handler(args *userInput, int bar_index) {
-    split_for_each_task(userInput, bar_index);
-    execute(userInput->arglist);
+    int isManager = split_for_each_task(userInput, bar_index);
+    if (!isManager)
+        execute(userInput->arglist);
 }
 /**
  * func for handle the forked process from the shell
@@ -147,20 +181,7 @@ void child_action(args userInput) {
     } else
         bar_handler(&userInput, bar_location);
 }
-void wait_error_handler(int status)
-{
 
-   if(status<0) //DUP it's known, but prevents edge case as func may change errno for junk value on success
-   {
-       switch (errno) {
-           case ECHILD:
-           case EINTR:
-               return;
-       }
-   }
-    error_handler(status, "wait failed");
-
-}
 /**
  * func to handle shell ui after fork
  * @param userInput
@@ -196,12 +217,11 @@ int process_arglist(int count, char **arglist) {
     args user_input = convert_user_input_to_structure(count, arglist);
     pid_t fork_id = fork();
     error_handler(fork_id, "forking failed");
-    bool is_parent = fork_id;
+    int is_parent = !!fork_id;  // convert to bool
     if (is_parent) {
         parent_action(user_input, fork_id);
     } else
         child_action(user_input);
-
 
     return is_parent;
 }
