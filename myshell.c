@@ -149,7 +149,8 @@ int split_for_each_task(args *userInput, int bar_index) {
         }
         else {
 
-
+            validate_pipe_close(close(pipe_end[0]));
+            validate_pipe_close(close(pipe_end[1])); //keep
             wait_error_handler(wait(NULL));
             wait_error_handler(wait(NULL));
             return fork_id&&fork_id2;
