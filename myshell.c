@@ -215,14 +215,13 @@ int process_arglist(int count, char **arglist) {
     args user_input = convert_user_input_to_structure(count, arglist);
     pid_t fork_id = fork();
     error_handler(fork_id, "forking failed");
-    bool is_parent = fork_id;
+    int is_parent = !!fork_id;  // convert to bool
     if (is_parent) {
         parent_action(user_input, fork_id);
     } else
         child_action(user_input);
 
-
-    return !!is_parent; // convert to bool
+    return is_parent;
 }
 
 
