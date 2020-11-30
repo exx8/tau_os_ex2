@@ -177,6 +177,7 @@ void child_action(args userInput) {
     userInput = remove_apersand(&userInput);
     const int bar_location = find_first_vertical_bar(userInput);
     if (bar_location == -1) {
+        //sidenote, according to man, no need to ensure handler is changed, as any program set its own handler
         execute(userInput.arglist);
     } else
         bar_handler(&userInput, bar_location);
