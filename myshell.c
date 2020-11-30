@@ -168,12 +168,20 @@ void bar_handler(args *userInput, int bar_index) {
     if (!isManager)
         execute(userInput->arglist);
 }
+bool isBackgroundCommand(args *userInput) {
+    const int ampersand_place = get_ampersand_place(userInput);
+    const bool should_task_run_in_background = (*userInput).arglist[ampersand_place][0] == '&';
+    return should_task_run_in_background;
+}
+
 /**
  * func for handle the forked process from the shell
  * @param userInput
  */
 void child_action(args userInput) {
-    prepare_handler(SIG_DFL, SIGINT);
+    if(!isBackgroundCommand(&userInput)) {
+        prepare_handler(SIG_DFL, SIGINT);
+    }
     userInput = remove_apersand(&userInput);
     const int bar_location = find_first_vertical_bar(userInput);
     if (bar_location == -1) {
@@ -183,14 +191,14 @@ void child_action(args userInput) {
         bar_handler(&userInput, bar_location);
 }
 
+
 /**
  * func to handle shell ui after fork
  * @param userInput
  * @param pid
  */
 void parent_action(args userInput, pid_t pid) {
-    const int ampersand_place = get_ampersand_place(&userInput);
-    const bool should_task_run_in_background = userInput.arglist[ampersand_place][0] == '&';
+    bool should_task_run_in_background = isBackgroundCommand(&userInput);
     if (!should_task_run_in_background) {
         int status = waitpid(pid, NULL, 0);
         wait_error_handler(status);
