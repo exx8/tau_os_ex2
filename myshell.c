@@ -108,7 +108,6 @@ void split_for_each_task(args *userInput, int bar_index) {
     error_handler(fork_id, "forking failed");
     if (fork_id) {
         //parent
-        waitpid(fork_id,NULL,0);
         userInput->count = bar_index;
         userInput->arglist[bar_index] = END_OF_STRING;
         status = dup2(pipe_end[1], STDOUT_FILENO);
