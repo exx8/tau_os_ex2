@@ -99,7 +99,20 @@ pid_t safe_fork() {
     error_handler(fork_id, "forking failed");
     return fork_id;
 }
+void wait_error_handler(int status)
+{
 
+    if(status<0) //DUP it's known, but prevents edge case as func may change errno for junk value on success
+    {
+        switch (errno) {
+            case ECHILD:
+            case EINTR:
+                return;
+        }
+    }
+    error_handler(status, "wait failed");
+
+}
 /**
  * in case of a pipe,split into 2 process which communicate via a pipe
  * @param userInput args struct
@@ -137,8 +150,8 @@ int split_for_each_task(args *userInput, int bar_index) {
         else {
 
 
-            wait(NULL);
-            wait(NULL);
+            wait_error_handler(wait(NULL));
+            wait_error_handler(wait(NULL));
             return fork_id&&fork_id2;
         }
     }
@@ -166,20 +179,7 @@ void child_action(args userInput) {
     } else
         bar_handler(&userInput, bar_location);
 }
-void wait_error_handler(int status)
-{
 
-   if(status<0) //DUP it's known, but prevents edge case as func may change errno for junk value on success
-   {
-       switch (errno) {
-           case ECHILD:
-           case EINTR:
-               return;
-       }
-   }
-    error_handler(status, "wait failed");
-
-}
 /**
  * func to handle shell ui after fork
  * @param userInput
@@ -222,7 +222,7 @@ int process_arglist(int count, char **arglist) {
         child_action(user_input);
 
 
-    return is_parent;
+    return !!is_parent; // convert to bool
 }
 
 
