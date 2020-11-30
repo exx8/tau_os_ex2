@@ -143,19 +143,20 @@ int split_for_each_task(args *userInput, int bar_index) {
 
             status = dup2(pipe_end[0], STDIN_FILENO);
             validate_pipe_close(close(pipe_end[0]));
-            validate_pipe_close(close(pipe_end[1])); //keep
+            validate_pipe_close(close(pipe_end[1]));
 
             error_handler(status, "piping duping failed");
         }
         else {
 
             validate_pipe_close(close(pipe_end[0]));
-            validate_pipe_close(close(pipe_end[1])); //keep
+            validate_pipe_close(close(pipe_end[1]));
             wait_error_handler(wait(NULL));
             wait_error_handler(wait(NULL));
-            return fork_id&&fork_id2;
+            return 1;
         }
     }
+    return 0; // it will never reach here, but for the simplicity of the analysis
 }
 /**
  * func to handle pipe command
