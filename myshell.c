@@ -39,7 +39,7 @@ void prepare_handler(__sighandler_t sighandler, int event) {
     cntrl_c_catcher.sa_flags = SA_RESTART;
     cntrl_c_catcher.sa_handler =sighandler ;
     int status = sigaction(event, &cntrl_c_catcher, NULL);
-    error_handler(status, "couldn't set zombie handler");
+    error_handler(status, "couldn't set  handler");
 
 }
 
