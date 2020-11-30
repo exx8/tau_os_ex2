@@ -13,6 +13,16 @@ stdbool.h
 -
 sys/wait.h
 -
+errno.h
+-
+stdlib.h
+-
+string.h
+-
+stdio.h
+-
+stdlib.h
+-
 
 /home/eran/CLionProjects/tau_os_ex2/shell.c
 stdio.h
