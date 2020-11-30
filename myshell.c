@@ -33,12 +33,12 @@ void error_handler(int status, char *msg) {
 /**
  * sets handler (empty func) as the zombie_reaper to prevent zombies
  */
-void prepare_sigint(__sighandler_t sighandler) {
+void prepare_handler(__sighandler_t sighandler, int event) {
     struct sigaction cntrl_c_catcher;
     memset(&cntrl_c_catcher,0,sizeof(cntrl_c_catcher));
     cntrl_c_catcher.sa_flags = SA_RESTART;
     cntrl_c_catcher.sa_handler =sighandler ;
-    int status = sigaction(SIGINT, &cntrl_c_catcher, NULL);
+    int status = sigaction(event, &cntrl_c_catcher, NULL);
     error_handler(status, "couldn't set zombie handler");
 
 }
@@ -173,7 +173,7 @@ void bar_handler(args *userInput, int bar_index) {
  * @param userInput
  */
 void child_action(args userInput) {
-    prepare_sigint(SIG_DFL);
+    prepare_handler(SIG_DFL, SIGINT);
     userInput = remove_apersand(&userInput);
     const int bar_location = find_first_vertical_bar(userInput);
     if (bar_location == -1) {
@@ -230,7 +230,8 @@ int process_arglist(int count, char **arglist) {
 
 // prepare and finalize calls for initialization and destruction of anything required
 int prepare(void) {
-    prepare_sigint(SIG_IGN);
+    prepare_handler(SIG_IGN, SIGINT);
+    prepare_handler(SIG_IGN,SIGCHLD);
     return 0;
 }
 
